@@ -1,45 +1,57 @@
 <!DOCTYPE html>
 <html>
 <head>
+
 <title>D&D Central</title>
 
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500&family=Roboto&display=swap" rel="stylesheet">
+
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+
 <style>
+
 body{
-font-family:Arial;
 margin:0;
-background:#1e1e2f;
+background:#121217;
 color:white;
+font-family:Roboto;
 }
 
 header{
-background:#111;
-padding:15px;
-font-size:28px;
+background:linear-gradient(90deg,#4b2a82,#7a2bbf);
+padding:20px;
+font-size:32px;
 text-align:center;
+font-family:Cinzel;
+letter-spacing:2px;
 }
 
 nav{
 display:flex;
-background:#222;
+justify-content:center;
+background:#1b1b24;
 }
 
 nav button{
-flex:1;
-padding:12px;
-background:#222;
+background:none;
 border:none;
 color:white;
-cursor:pointer;
+padding:15px 25px;
 font-size:16px;
+cursor:pointer;
+transition:.2s;
+font-family:Cinzel;
 }
 
 nav button:hover{
-background:#444;
+background:#333;
 }
 
 .tab{
 display:none;
-padding:20px;
+padding:30px;
+max-width:1100px;
+margin:auto;
 }
 
 .active{
@@ -47,39 +59,63 @@ display:block;
 }
 
 .card{
-background:#2e2e45;
-padding:15px;
-margin:10px 0;
+background:#1e1e29;
+padding:20px;
+margin:15px 0;
 border-radius:10px;
+box-shadow:0 0 10px #000;
 }
 
-input,select{
+input,select,textarea{
 padding:8px;
 margin:5px;
+border-radius:6px;
+border:none;
 }
 
-button{
-padding:8px 12px;
-margin:5px;
+button.action{
+background:#7a2bbf;
+color:white;
+border:none;
+padding:10px 18px;
+border-radius:8px;
 cursor:pointer;
 }
 
-.locked{
-color:#ff6b6b;
-font-weight:bold;
-}
-
-.sheet{
-background:white;
-color:black;
-padding:20px;
-margin-top:20px;
+button.action:hover{
+background:#9c44e8;
 }
 
 .grid{
 display:grid;
-grid-template-columns:1fr 1fr;
+grid-template-columns:repeat(2,1fr);
 gap:10px;
+}
+
+.statgrid{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:10px;
+}
+
+#sheet{
+background:white;
+color:black;
+padding:30px;
+border-radius:10px;
+margin-top:20px;
+font-family:Roboto;
+}
+
+.sheet-title{
+font-family:Cinzel;
+font-size:28px;
+}
+
+.logo{
+font-family:Cinzel;
+font-size:24px;
+color:#7a2bbf;
 }
 
 </style>
@@ -87,27 +123,37 @@ gap:10px;
 
 <body>
 
-<header>D&D Central</header>
+<header>D&D CENTRAL</header>
 
 <nav>
-<button onclick="openTab('home')">Home</button>
-<button onclick="openTab('dice')">Dice Roller</button>
-<button onclick="openTab('char')">Character Maker</button>
-<button onclick="openTab('account')">Account</button>
+
+<button onclick="tab('home')">Home</button>
+<button onclick="tab('dice')">Dice</button>
+<button onclick="tab('char')">Character Builder</button>
+<button onclick="tab('account')">Account</button>
+
 </nav>
 
+<!-- HOME -->
+
 <div id="home" class="tab active">
-<h2>Welcome to D&D Central</h2>
-<p>Your club hub for dice, characters, and chaos.</p>
+
+<div class="card">
+<h2>Welcome Adventurer</h2>
+<p>D&D Central is your club's hub for dice rolling, character creation, and campaign tools.</p>
 </div>
 
+</div>
+
+<!-- DICE -->
+
 <div id="dice" class="tab">
+
+<div class="card">
+
 <h2>Dice Roller</h2>
-<div id="diceLocked" class="locked">Login required to roll dice.</div>
 
-<div id="diceContent" style="display:none">
-
-<select id="diceType">
+<select id="diceSides">
 <option value="4">d4</option>
 <option value="6">d6</option>
 <option value="8">d8</option>
@@ -117,73 +163,127 @@ gap:10px;
 <option value="100">d100</option>
 </select>
 
-<button onclick="rollDice()">Roll</button>
+<input type="number" id="diceAmount" value="1" min="1">
 
-<h3 id="diceResult"></h3>
+<button class="action" onclick="rollDice()">Roll</button>
+
+<h2 id="diceResult"></h2>
 
 </div>
+
 </div>
+
+<!-- CHARACTER -->
 
 <div id="char" class="tab">
-<h2>Character Maker</h2>
 
-<div id="charLocked" class="locked">Login required to create characters.</div>
+<div id="charLock" class="card">
+Login required to use character builder
+</div>
 
 <div id="charContent" style="display:none">
 
+<div class="card">
+
+<h2>Create Character</h2>
+
 <div class="grid">
 
-<input id="c_name" placeholder="Character Name">
-<input id="c_class" placeholder="Class">
+<input id="cname" placeholder="Character Name">
 
-<input id="c_race" placeholder="Race">
-<input id="c_level" type="number" placeholder="Level">
+<select id="crace">
+<option>Human</option>
+<option>Elf</option>
+<option>Dwarf</option>
+<option>Halfling</option>
+<option>Dragonborn</option>
+<option>Tiefling</option>
+<option>Half-Orc</option>
+<option>Gnome</option>
+</select>
 
-<input id="c_str" type="number" placeholder="STR">
-<input id="c_dex" type="number" placeholder="DEX">
+<select id="cclass">
+<option>Fighter</option>
+<option>Wizard</option>
+<option>Rogue</option>
+<option>Cleric</option>
+<option>Paladin</option>
+<option>Warlock</option>
+<option>Bard</option>
+<option>Ranger</option>
+<option>Monk</option>
+<option>Druid</option>
+</select>
 
-<input id="c_con" type="number" placeholder="CON">
-<input id="c_int" type="number" placeholder="INT">
-
-<input id="c_wis" type="number" placeholder="WIS">
-<input id="c_cha" type="number" placeholder="CHA">
+<input id="clevel" type="number" value="1">
 
 </div>
 
-<button onclick="saveCharacter()">Save Character</button>
-<button onclick="printSheet()">Print Sheet</button>
+<h3>Ability Scores</h3>
 
-<div id="sheet" class="sheet"></div>
+<div class="statgrid">
+
+<input id="str" type="number" placeholder="STR">
+<input id="dex" type="number" placeholder="DEX">
+<input id="con" type="number" placeholder="CON">
+<input id="int" type="number" placeholder="INT">
+<input id="wis" type="number" placeholder="WIS">
+<input id="cha" type="number" placeholder="CHA">
 
 </div>
+
+<h3>Inventory</h3>
+
+<textarea id="inventory" rows="3"></textarea>
+
+<h3>Notes</h3>
+
+<textarea id="notes" rows="3"></textarea>
+
+<br>
+
+<button class="action" onclick="buildSheet()">Preview Sheet</button>
+<button class="action" onclick="downloadSheet()">Download Sheet Image</button>
+
+<div id="sheet"></div>
+
 </div>
+
+</div>
+
+</div>
+
+<!-- ACCOUNT -->
 
 <div id="account" class="tab">
-<h2>Account</h2>
 
-<div id="loginArea">
+<div id="loginBox" class="card">
 
-<h3>Login</h3>
+<h2>Login</h2>
 
 <input id="loginUser" placeholder="Username">
 <input id="loginPass" type="password" placeholder="Password">
 
-<button onclick="login()">Login</button>
+<br>
 
-<h3>Sign Up</h3>
+<button class="action" onclick="login()">Login</button>
 
-<input id="signupUser" placeholder="Username">
-<input id="signupPass" type="password" placeholder="Password">
+<h2>Create Account</h2>
 
-<button onclick="signup()">Sign Up</button>
+<input id="newUser" placeholder="Username">
+<input id="newPass" type="password" placeholder="Password">
+
+<br>
+
+<button class="action" onclick="signup()">Sign Up</button>
 
 </div>
 
-<div id="loggedArea" style="display:none">
+<div id="accountPanel" style="display:none" class="card">
 
-<h3 id="welcome"></h3>
+<h2 id="welcome"></h2>
 
-<button onclick="logout()">Logout</button>
+<button class="action" onclick="logout()">Logout</button>
 
 </div>
 
@@ -191,46 +291,70 @@ gap:10px;
 
 <script>
 
-let currentUser=null
+let user=null
 
-function openTab(id){
+function tab(id){
 document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"))
 document.getElementById(id).classList.add("active")
 }
 
+function rollDice(){
+
+let sides=parseInt(diceSides.value)
+let amount=parseInt(diceAmount.value)
+
+let total=0
+let rolls=[]
+
+for(let i=0;i<amount;i++){
+
+let r=Math.floor(Math.random()*sides)+1
+rolls.push(r)
+total+=r
+
+}
+
+diceResult.innerHTML="Rolls: "+rolls.join(", ")+"<br>Total: "+total
+
+}
+
 function signup(){
 
-let u=document.getElementById("signupUser").value
-let p=document.getElementById("signupPass").value
+let u=newUser.value
+let p=newPass.value
 
-if(!u||!p) return
+if(localStorage.getItem("user_"+u)){
+alert("Username already exists on this device")
+return
+}
 
 localStorage.setItem("user_"+u,p)
 
-alert("Account created!")
+alert("Account created")
 
 }
 
 function login(){
 
-let u=document.getElementById("loginUser").value
-let p=document.getElementById("loginPass").value
+let u=loginUser.value
+let p=loginPass.value
 
 let saved=localStorage.getItem("user_"+u)
 
 if(saved===p){
 
-currentUser=u
+user=u
 
-document.getElementById("loginArea").style.display="none"
-document.getElementById("loggedArea").style.display="block"
-document.getElementById("welcome").innerText="Logged in as "+u
+loginBox.style.display="none"
+accountPanel.style.display="block"
+welcome.innerText="Logged in as "+u
 
-unlockFeatures()
+charLock.style.display="none"
+charContent.style.display="block"
 
 }else{
 
-alert("Wrong login")
+alert("Incorrect login")
 
 }
 
@@ -238,102 +362,57 @@ alert("Wrong login")
 
 function logout(){
 
-currentUser=null
+user=null
 
-document.getElementById("loginArea").style.display="block"
-document.getElementById("loggedArea").style.display="none"
+loginBox.style.display="block"
+accountPanel.style.display="none"
 
-lockFeatures()
-
-}
-
-function unlockFeatures(){
-
-document.getElementById("diceLocked").style.display="none"
-document.getElementById("diceContent").style.display="block"
-
-document.getElementById("charLocked").style.display="none"
-document.getElementById("charContent").style.display="block"
+charLock.style.display="block"
+charContent.style.display="none"
 
 }
 
-function lockFeatures(){
+function buildSheet(){
 
-document.getElementById("diceLocked").style.display="block"
-document.getElementById("diceContent").style.display="none"
+sheet.innerHTML=`
 
-document.getElementById("charLocked").style.display="block"
-document.getElementById("charContent").style.display="none"
+<div class="logo">D&D CENTRAL</div>
 
-}
+<div class="sheet-title">${cname.value}</div>
 
-function rollDice(){
+<p><b>Race:</b> ${crace.value}</p>
+<p><b>Class:</b> ${cclass.value}</p>
+<p><b>Level:</b> ${clevel.value}</p>
 
-let sides=document.getElementById("diceType").value
-let roll=Math.floor(Math.random()*sides)+1
+<h3>Ability Scores</h3>
 
-document.getElementById("diceResult").innerText="You rolled: "+roll
+<p>STR: ${str.value}</p>
+<p>DEX: ${dex.value}</p>
+<p>CON: ${con.value}</p>
+<p>INT: ${int.value}</p>
+<p>WIS: ${wis.value}</p>
+<p>CHA: ${cha.value}</p>
 
-}
+<h3>Inventory</h3>
+<p>${inventory.value}</p>
 
-function saveCharacter(){
-
-let char={
-
-name:c_name.value,
-class:c_class.value,
-race:c_race.value,
-level:c_level.value,
-
-str:c_str.value,
-dex:c_dex.value,
-con:c_con.value,
-int:c_int.value,
-wis:c_wis.value,
-cha:c_cha.value
-
-}
-
-localStorage.setItem("char_"+currentUser,JSON.stringify(char))
-
-displaySheet(char)
-
-}
-
-function displaySheet(c){
-
-let s=document.getElementById("sheet")
-
-s.innerHTML=`
-
-<h2>${c.name}</h2>
-
-<p><b>Class:</b> ${c.class}</p>
-<p><b>Race:</b> ${c.race}</p>
-<p><b>Level:</b> ${c.level}</p>
-
-<h3>Stats</h3>
-
-<p>STR ${c.str}</p>
-<p>DEX ${c.dex}</p>
-<p>CON ${c.con}</p>
-<p>INT ${c.int}</p>
-<p>WIS ${c.wis}</p>
-<p>CHA ${c.cha}</p>
+<h3>Notes</h3>
+<p>${notes.value}</p>
 
 `
 
 }
 
-function printSheet(){
+function downloadSheet(){
 
-let content=document.getElementById("sheet").innerHTML
+html2canvas(document.querySelector("#sheet")).then(canvas=>{
 
-let win=window.open()
+let link=document.createElement("a")
+link.download="character_sheet.png"
+link.href=canvas.toDataURL()
+link.click()
 
-win.document.write("<html><body>"+content+"</body></html>")
-
-win.print()
+})
 
 }
 
