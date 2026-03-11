@@ -4,7 +4,7 @@
 
 <title>D&D Central</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500&family=Roboto&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600&family=Roboto&display=swap" rel="stylesheet">
 
 <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 
@@ -12,35 +12,33 @@
 
 body{
 margin:0;
-background:#121217;
+background:#101018;
 color:white;
 font-family:Roboto;
 }
 
 header{
-background:linear-gradient(90deg,#4b2a82,#7a2bbf);
+background:linear-gradient(90deg,#5a2aa6,#8b3fff);
 padding:20px;
+font-family:Cinzel;
 font-size:32px;
 text-align:center;
-font-family:Cinzel;
-letter-spacing:2px;
 }
 
 nav{
 display:flex;
 justify-content:center;
-background:#1b1b24;
+background:#181824;
 }
 
 nav button{
 background:none;
 border:none;
 color:white;
-padding:15px 25px;
+padding:14px 22px;
+font-family:Cinzel;
 font-size:16px;
 cursor:pointer;
-transition:.2s;
-font-family:Cinzel;
 }
 
 nav button:hover{
@@ -54,41 +52,34 @@ max-width:1100px;
 margin:auto;
 }
 
-.active{
-display:block;
-}
+.active{display:block;}
 
 .card{
-background:#1e1e29;
+background:#1b1b29;
 padding:20px;
-margin:15px 0;
+margin-bottom:20px;
 border-radius:10px;
-box-shadow:0 0 10px #000;
-}
-
-input,select,textarea{
-padding:8px;
-margin:5px;
-border-radius:6px;
-border:none;
 }
 
 button.action{
-background:#7a2bbf;
-color:white;
+background:#8b3fff;
 border:none;
 padding:10px 18px;
+color:white;
 border-radius:8px;
 cursor:pointer;
 }
 
-button.action:hover{
-background:#9c44e8;
+input,select,textarea{
+padding:8px;
+border-radius:6px;
+border:none;
+margin:4px;
 }
 
 .grid{
 display:grid;
-grid-template-columns:repeat(2,1fr);
+grid-template-columns:1fr 1fr;
 gap:10px;
 }
 
@@ -101,21 +92,15 @@ gap:10px;
 #sheet{
 background:white;
 color:black;
-padding:30px;
+padding:25px;
 border-radius:10px;
 margin-top:20px;
-font-family:Roboto;
-}
-
-.sheet-title{
-font-family:Cinzel;
-font-size:28px;
 }
 
 .logo{
 font-family:Cinzel;
-font-size:24px;
-color:#7a2bbf;
+font-size:26px;
+color:#8b3fff;
 }
 
 </style>
@@ -129,7 +114,10 @@ color:#7a2bbf;
 
 <button onclick="tab('home')">Home</button>
 <button onclick="tab('dice')">Dice</button>
-<button onclick="tab('char')">Character Builder</button>
+<button onclick="tab('character')">Characters</button>
+<button onclick="tab('dm')">DM Central</button>
+<button onclick="tab('encounter')">Encounter Builder</button>
+<button onclick="tab('names')">Name Generator</button>
 <button onclick="tab('account')">Account</button>
 
 </nav>
@@ -140,7 +128,16 @@ color:#7a2bbf;
 
 <div class="card">
 <h2>Welcome Adventurer</h2>
-<p>D&D Central is your club's hub for dice rolling, character creation, and campaign tools.</p>
+<p>D&D Central is a tool hub for your club.</p>
+
+<ul>
+<li>Character builder</li>
+<li>Dice roller</li>
+<li>DM campaign tools</li>
+<li>Encounter generator</li>
+<li>Fantasy name generator</li>
+</ul>
+
 </div>
 
 </div>
@@ -153,6 +150,8 @@ color:#7a2bbf;
 
 <h2>Dice Roller</h2>
 
+<input id="diceAmount" type="number" value="1">
+
 <select id="diceSides">
 <option value="4">d4</option>
 <option value="6">d6</option>
@@ -162,8 +161,6 @@ color:#7a2bbf;
 <option value="20">d20</option>
 <option value="100">d100</option>
 </select>
-
-<input type="number" id="diceAmount" value="1" min="1">
 
 <button class="action" onclick="rollDice()">Roll</button>
 
@@ -175,34 +172,45 @@ color:#7a2bbf;
 
 <!-- CHARACTER -->
 
-<div id="char" class="tab">
+<div id="character" class="tab">
 
 <div id="charLock" class="card">
-Login required to use character builder
+Login required to create characters
 </div>
 
 <div id="charContent" style="display:none">
 
 <div class="card">
 
-<h2>Create Character</h2>
+<h2>Character Builder</h2>
 
 <div class="grid">
 
 <input id="cname" placeholder="Character Name">
 
-<select id="crace">
+<select id="race">
 <option>Human</option>
 <option>Elf</option>
+<option>High Elf</option>
+<option>Wood Elf</option>
+<option>Dark Elf (Drow)</option>
 <option>Dwarf</option>
+<option>Hill Dwarf</option>
+<option>Mountain Dwarf</option>
 <option>Halfling</option>
+<option>Lightfoot Halfling</option>
+<option>Stout Halfling</option>
 <option>Dragonborn</option>
 <option>Tiefling</option>
 <option>Half-Orc</option>
+<option>Half-Elf</option>
 <option>Gnome</option>
+<option>Forest Gnome</option>
+<option>Rock Gnome</option>
 </select>
 
-<select id="cclass">
+<select id="class">
+
 <option>Fighter</option>
 <option>Wizard</option>
 <option>Rogue</option>
@@ -213,9 +221,13 @@ Login required to use character builder
 <option>Ranger</option>
 <option>Monk</option>
 <option>Druid</option>
+<option>Sorcerer</option>
+<option>Barbarian</option>
+<option>Artificer</option>
+
 </select>
 
-<input id="clevel" type="number" value="1">
+<input id="level" type="number" value="1">
 
 </div>
 
@@ -223,31 +235,89 @@ Login required to use character builder
 
 <div class="statgrid">
 
-<input id="str" type="number" placeholder="STR">
-<input id="dex" type="number" placeholder="DEX">
-<input id="con" type="number" placeholder="CON">
-<input id="int" type="number" placeholder="INT">
-<input id="wis" type="number" placeholder="WIS">
-<input id="cha" type="number" placeholder="CHA">
+<input id="str" placeholder="STR">
+<input id="dex" placeholder="DEX">
+<input id="con" placeholder="CON">
+<input id="int" placeholder="INT">
+<input id="wis" placeholder="WIS">
+<input id="cha" placeholder="CHA">
 
 </div>
 
 <h3>Inventory</h3>
-
-<textarea id="inventory" rows="3"></textarea>
+<textarea id="inventory"></textarea>
 
 <h3>Notes</h3>
-
-<textarea id="notes" rows="3"></textarea>
+<textarea id="notes"></textarea>
 
 <br>
 
 <button class="action" onclick="buildSheet()">Preview Sheet</button>
-<button class="action" onclick="downloadSheet()">Download Sheet Image</button>
+<button class="action" onclick="downloadSheet()">Download Sheet</button>
 
 <div id="sheet"></div>
 
 </div>
+
+</div>
+
+</div>
+
+<!-- DM CENTRAL -->
+
+<div id="dm" class="tab">
+
+<div class="card">
+
+<h2>Campaign Idea Generator</h2>
+
+<button class="action" onclick="generateCampaign()">Generate Idea</button>
+
+<p id="campaignIdea"></p>
+
+<h2>Villain Generator</h2>
+
+<button class="action" onclick="generateVillain()">Generate Villain</button>
+
+<p id="villain"></p>
+
+<h2>Plot Hook Generator</h2>
+
+<button class="action" onclick="generateHook()">Generate Hook</button>
+
+<p id="hook"></p>
+
+</div>
+
+</div>
+
+<!-- ENCOUNTER -->
+
+<div id="encounter" class="tab">
+
+<div class="card">
+
+<h2>Encounter Builder</h2>
+
+<button class="action" onclick="generateEncounter()">Generate Encounter</button>
+
+<p id="encounterResult"></p>
+
+</div>
+
+</div>
+
+<!-- NAME GENERATOR -->
+
+<div id="names" class="tab">
+
+<div class="card">
+
+<h2>Fantasy Name Generator</h2>
+
+<button class="action" onclick="genName()">Generate Name</button>
+
+<h2 id="nameResult"></h2>
 
 </div>
 
@@ -282,7 +352,6 @@ Login required to use character builder
 <div id="accountPanel" style="display:none" class="card">
 
 <h2 id="welcome"></h2>
-
 <button class="action" onclick="logout()">Logout</button>
 
 </div>
@@ -299,121 +368,138 @@ document.getElementById(id).classList.add("active")
 }
 
 function rollDice(){
-
-let sides=parseInt(diceSides.value)
-let amount=parseInt(diceAmount.value)
-
+let a=diceAmount.value
+let s=diceSides.value
 let total=0
 let rolls=[]
-
-for(let i=0;i<amount;i++){
-
-let r=Math.floor(Math.random()*sides)+1
+for(let i=0;i<a;i++){
+let r=Math.floor(Math.random()*s)+1
 rolls.push(r)
 total+=r
-
 }
-
-diceResult.innerHTML="Rolls: "+rolls.join(", ")+"<br>Total: "+total
-
+diceResult.innerHTML="Rolls: "+rolls.join(", ")+" | Total: "+total
 }
 
 function signup(){
-
 let u=newUser.value
 let p=newPass.value
-
 if(localStorage.getItem("user_"+u)){
-alert("Username already exists on this device")
+alert("Username exists on this device")
 return
 }
-
 localStorage.setItem("user_"+u,p)
-
 alert("Account created")
-
 }
 
 function login(){
-
 let u=loginUser.value
 let p=loginPass.value
-
-let saved=localStorage.getItem("user_"+u)
-
-if(saved===p){
-
+if(localStorage.getItem("user_"+u)===p){
 user=u
-
 loginBox.style.display="none"
 accountPanel.style.display="block"
 welcome.innerText="Logged in as "+u
-
 charLock.style.display="none"
 charContent.style.display="block"
-
 }else{
-
-alert("Incorrect login")
-
+alert("Wrong login")
 }
-
 }
 
 function logout(){
-
 user=null
-
 loginBox.style.display="block"
 accountPanel.style.display="none"
-
 charLock.style.display="block"
 charContent.style.display="none"
-
 }
 
 function buildSheet(){
 
 sheet.innerHTML=`
-
 <div class="logo">D&D CENTRAL</div>
 
-<div class="sheet-title">${cname.value}</div>
+<h2>${cname.value}</h2>
 
-<p><b>Race:</b> ${crace.value}</p>
-<p><b>Class:</b> ${cclass.value}</p>
-<p><b>Level:</b> ${clevel.value}</p>
+<p>Race: ${race.value}</p>
+<p>Class: ${document.getElementById("class").value}</p>
+<p>Level: ${level.value}</p>
 
 <h3>Ability Scores</h3>
 
-<p>STR: ${str.value}</p>
-<p>DEX: ${dex.value}</p>
-<p>CON: ${con.value}</p>
-<p>INT: ${int.value}</p>
-<p>WIS: ${wis.value}</p>
-<p>CHA: ${cha.value}</p>
+STR ${str.value}<br>
+DEX ${dex.value}<br>
+CON ${con.value}<br>
+INT ${int.value}<br>
+WIS ${wis.value}<br>
+CHA ${cha.value}
 
 <h3>Inventory</h3>
-<p>${inventory.value}</p>
+${inventory.value}
 
 <h3>Notes</h3>
-<p>${notes.value}</p>
-
+${notes.value}
 `
-
 }
 
 function downloadSheet(){
-
-html2canvas(document.querySelector("#sheet")).then(canvas=>{
-
+html2canvas(sheet).then(canvas=>{
 let link=document.createElement("a")
-link.download="character_sheet.png"
+link.download="character.png"
 link.href=canvas.toDataURL()
 link.click()
-
 })
+}
 
+function generateCampaign(){
+let ideas=[
+"A kingdom slowly turning to stone",
+"A dragon secretly ruling a city",
+"A lost magical library",
+"A cursed forest spreading darkness"
+]
+campaignIdea.innerText=ideas[Math.floor(Math.random()*ideas.length)]
+}
+
+function generateVillain(){
+let villains=[
+"Corrupted archmage",
+"Ancient vampire lord",
+"Necromancer king",
+"Exiled celestial seeking revenge"
+]
+villain.innerText=villains[Math.floor(Math.random()*villains.length)]
+}
+
+function generateHook(){
+let hooks=[
+"A village disappears overnight",
+"A magical artifact is stolen",
+"A portal opens in the town square",
+"A ghost begs the party for help"
+]
+hook.innerText=hooks[Math.floor(Math.random()*hooks.length)]
+}
+
+function generateEncounter(){
+let enemies=[
+"Goblins",
+"Skeletons",
+"Orcs",
+"Bandits",
+"Zombies",
+"Dark cultists"
+]
+let count=Math.floor(Math.random()*5)+1
+encounterResult.innerText=count+" "+enemies[Math.floor(Math.random()*enemies.length)]
+}
+
+function genName(){
+let first=["Arin","Belor","Doran","Kael","Lira","Thorin","Zara","Valen"]
+let last=["Stormblade","Moonshadow","Ironfist","Nightfall","Fireborn","Silverleaf"]
+nameResult.innerText=
+first[Math.floor(Math.random()*first.length)]+" "+
+last[Math.floor(Math.random()*last.length)]
 }
 
 </script>
