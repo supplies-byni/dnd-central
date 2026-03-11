@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>D&D Central</title>
+
+<style>
+body{
+font-family:Arial;
+margin:0;
+background:#1e1e2f;
+color:white;
+}
+
+header{
+background:#111;
+padding:15px;
+font-size:28px;
+text-align:center;
+}
+
+nav{
+display:flex;
+background:#222;
+}
+
+nav button{
+flex:1;
+padding:12px;
+background:#222;
+border:none;
+color:white;
+cursor:pointer;
+font-size:16px;
+}
+
+nav button:hover{
+background:#444;
+}
+
+.tab{
+display:none;
+padding:20px;
+}
+
+.active{
+display:block;
+}
+
+.card{
+background:#2e2e45;
+padding:15px;
+margin:10px 0;
+border-radius:10px;
+}
+
+input,select{
+padding:8px;
+margin:5px;
+}
+
+button{
+padding:8px 12px;
+margin:5px;
+cursor:pointer;
+}
+
+.locked{
+color:#ff6b6b;
+font-weight:bold;
+}
+
+.sheet{
+background:white;
+color:black;
+padding:20px;
+margin-top:20px;
+}
+
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px;
+}
+
+</style>
+</head>
+
+<body>
+
+<header>D&D Central</header>
+
+<nav>
+<button onclick="openTab('home')">Home</button>
+<button onclick="openTab('dice')">Dice Roller</button>
+<button onclick="openTab('char')">Character Maker</button>
+<button onclick="openTab('account')">Account</button>
+</nav>
+
+<div id="home" class="tab active">
+<h2>Welcome to D&D Central</h2>
+<p>Your club hub for dice, characters, and chaos.</p>
+</div>
+
+<div id="dice" class="tab">
+<h2>Dice Roller</h2>
+<div id="diceLocked" class="locked">Login required to roll dice.</div>
+
+<div id="diceContent" style="display:none">
+
+<select id="diceType">
+<option value="4">d4</option>
+<option value="6">d6</option>
+<option value="8">d8</option>
+<option value="10">d10</option>
+<option value="12">d12</option>
+<option value="20">d20</option>
+<option value="100">d100</option>
+</select>
+
+<button onclick="rollDice()">Roll</button>
+
+<h3 id="diceResult"></h3>
+
+</div>
+</div>
+
+<div id="char" class="tab">
+<h2>Character Maker</h2>
+
+<div id="charLocked" class="locked">Login required to create characters.</div>
+
+<div id="charContent" style="display:none">
+
+<div class="grid">
+
+<input id="c_name" placeholder="Character Name">
+<input id="c_class" placeholder="Class">
+
+<input id="c_race" placeholder="Race">
+<input id="c_level" type="number" placeholder="Level">
+
+<input id="c_str" type="number" placeholder="STR">
+<input id="c_dex" type="number" placeholder="DEX">
+
+<input id="c_con" type="number" placeholder="CON">
+<input id="c_int" type="number" placeholder="INT">
+
+<input id="c_wis" type="number" placeholder="WIS">
+<input id="c_cha" type="number" placeholder="CHA">
+
+</div>
+
+<button onclick="saveCharacter()">Save Character</button>
+<button onclick="printSheet()">Print Sheet</button>
+
+<div id="sheet" class="sheet"></div>
+
+</div>
+</div>
+
+<div id="account" class="tab">
+<h2>Account</h2>
+
+<div id="loginArea">
+
+<h3>Login</h3>
+
+<input id="loginUser" placeholder="Username">
+<input id="loginPass" type="password" placeholder="Password">
+
+<button onclick="login()">Login</button>
+
+<h3>Sign Up</h3>
+
+<input id="signupUser" placeholder="Username">
+<input id="signupPass" type="password" placeholder="Password">
+
+<button onclick="signup()">Sign Up</button>
+
+</div>
+
+<div id="loggedArea" style="display:none">
+
+<h3 id="welcome"></h3>
+
+<button onclick="logout()">Logout</button>
+
+</div>
+
+</div>
+
+<script>
+
+let currentUser=null
+
+function openTab(id){
+document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"))
+document.getElementById(id).classList.add("active")
+}
+
+function signup(){
+
+let u=document.getElementById("signupUser").value
+let p=document.getElementById("signupPass").value
+
+if(!u||!p) return
+
+localStorage.setItem("user_"+u,p)
+
+alert("Account created!")
+
+}
+
+function login(){
+
+let u=document.getElementById("loginUser").value
+let p=document.getElementById("loginPass").value
+
+let saved=localStorage.getItem("user_"+u)
+
+if(saved===p){
+
+currentUser=u
+
+document.getElementById("loginArea").style.display="none"
+document.getElementById("loggedArea").style.display="block"
+document.getElementById("welcome").innerText="Logged in as "+u
+
+unlockFeatures()
+
+}else{
+
+alert("Wrong login")
+
+}
+
+}
+
+function logout(){
+
+currentUser=null
+
+document.getElementById("loginArea").style.display="block"
+document.getElementById("loggedArea").style.display="none"
+
+lockFeatures()
+
+}
+
+function unlockFeatures(){
+
+document.getElementById("diceLocked").style.display="none"
+document.getElementById("diceContent").style.display="block"
+
+document.getElementById("charLocked").style.display="none"
+document.getElementById("charContent").style.display="block"
+
+}
+
+function lockFeatures(){
+
+document.getElementById("diceLocked").style.display="block"
+document.getElementById("diceContent").style.display="none"
+
+document.getElementById("charLocked").style.display="block"
+document.getElementById("charContent").style.display="none"
+
+}
+
+function rollDice(){
+
+let sides=document.getElementById("diceType").value
+let roll=Math.floor(Math.random()*sides)+1
+
+document.getElementById("diceResult").innerText="You rolled: "+roll
+
+}
+
+function saveCharacter(){
+
+let char={
+
+name:c_name.value,
+class:c_class.value,
+race:c_race.value,
+level:c_level.value,
+
+str:c_str.value,
+dex:c_dex.value,
+con:c_con.value,
+int:c_int.value,
+wis:c_wis.value,
+cha:c_cha.value
+
+}
+
+localStorage.setItem("char_"+currentUser,JSON.stringify(char))
+
+displaySheet(char)
+
+}
+
+function displaySheet(c){
+
+let s=document.getElementById("sheet")
+
+s.innerHTML=`
+
+<h2>${c.name}</h2>
+
+<p><b>Class:</b> ${c.class}</p>
+<p><b>Race:</b> ${c.race}</p>
+<p><b>Level:</b> ${c.level}</p>
+
+<h3>Stats</h3>
+
+<p>STR ${c.str}</p>
+<p>DEX ${c.dex}</p>
+<p>CON ${c.con}</p>
+<p>INT ${c.int}</p>
+<p>WIS ${c.wis}</p>
+<p>CHA ${c.cha}</p>
+
+`
+
+}
+
+function printSheet(){
+
+let content=document.getElementById("sheet").innerHTML
+
+let win=window.open()
+
+win.document.write("<html><body>"+content+"</body></html>")
+
+win.print()
+
+}
+
+</script>
+
+</body>
+</html>
